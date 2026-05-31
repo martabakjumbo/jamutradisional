@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamu Tradisional Lestari</title>
+    <style>
+        /* --- ROOT STYLES & THEME --- */
+        :root {
+            --primary-color: #2c5e3b; /* Hijau Jamu kuno */
+            --secondary-color: #df9f28; /* Kunyit kuning */
+            --light-bg: #f7f5f0; /* Krem bersih */
+            --dark-text: #2b2b2b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            background-color: var(--primary-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--secondary-color);
+        }
+
+        /* --- PAGE MANAGEMENT --- */
+        .page {
+            display: none; /* Sembunyikan semua halaman secara default */
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block; /* Hanya tampilkan halaman yang aktif */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- COMMON COMPONENTS --- */
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(44, 94, 59, 0.8), rgba(44, 94, 59, 0.8)), url('https://images.unsplash.com/photo-1611070973770-b1a672610041?auto=format&fit=crop&q=80&w=1200') no-repeat center center/cover;
+            color: var(--white);
+            padding: 5rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .hero button {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .hero button:hover {
+            background-color: #c7891e;
+        }
+
+        /* --- PRODUCT GRID (4x4) --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Membuat susunan 4 kolom kesamping */
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img-placeholder {
+            background-color: #e8ede9;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+
+        .product-action {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .qty-input {
+            width: 60px;
+            padding: 0.4rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .btn-buy {
+            flex-grow: 1;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-buy:hover {
+            background-color: #1e4229;
+        }
+
+        /* --- CHECKOUT PAGE --- */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cart-table th, .cart-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cart-table th {
+            background-color: #f2f2f2;
+            color: var(--primary-color);
+        }
+
+        .total-section {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+            color: var(--primary-color);
+        }
+
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border-left: 1px solid #e0e0e0;
+            padding-left: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group input, .form-group textarea {
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-submit-order {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        /* --- RESPONSIVE WORKAROUND --- */
+        @media (max-width: 992px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+            .checkout-container { grid-template-columns: 1fr; }
+            .checkout-form { border-left: none; padding-left: 0; }
+        }
+        @media (max-width: 576px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .nav-links { gap: 0.8rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">🌿 JamuLestari</div>
+            <ul class="nav-links">
+                <li><a onclick="navigateTo('home')" id="nav-home" class="active">Beranda</a></li>
+                <li><a onclick="navigateTo('about')" id="nav-about">Tentang</a></li>
+                <li><a onclick="navigateTo('products')" id="nav-products">Produk</a></li>
+                <li><a onclick="navigateTo('contact')" id="nav-contact">Kontak</a></li>
+                <li><a onclick="navigateTo('checkout')" id="nav-checkout">Checkout (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="page active">
+        <div class="hero">
+            <h1>Jamu Tradisional Alami & Warisan Leluhur</h1>
+            <p>Dibuat murni dari rempah-rempah pilihan nusantara untuk menjaga kesehatan tubuh Anda tetap prima secara natural.</p>
+            <button onclick="navigateTo('products')">Lihat Produk Kami</button>
+        </div>
+        <div style="margin-top: 2rem; background: white; padding: 2rem; border-radius: 8px;">
+            <h2>Kenapa Memilih Jamu Kami?</h2>
+            <p style="margin-top: 0.5rem;">Kami menggunakan metode ekstraksi tradisional tanpa bahan pengawet kimia berbahaya. Higienis, segar, dan berkhasiat nyata.</p>
+        </div>
+    </section>
+
+    <section id="about" class="page">
+        <h1>Tentang Jamu Lestari</h1>
+        <div style="background: white; padding: 2rem; border-radius: 8px; margin-top: 1rem;">
+            <p>Jamu Lestari dirintis sejak tahun 2010 dengan misi membawa kembali khasiat ramuan herbal asli Indonesia ke era modern. Kami bekerjasama langsung dengan petani lokal untuk mendapatkan kunyit, jahe, temulawak, dan kencur berkualitas terbaik.</p>
+            <br>
+            <p>Setiap botol diproses dengan pengawasan ketat demi menjaga sterilitas tanpa mengurangi kualitas nutrisi esensial di dalamnya.</p>
+        </div>
+    </section>
+
+    <section id="products" class="page">
+        <h1>Katalog Jamu Tradisional</h1>
+        <p>Silakan pilih jumlah botol lalu klik tombol <strong>Beli</strong>.</p>
+        
+        <div class="product-grid" id="product-container">
+            </div>
+    </section>
+
+    <section id="contact" class="page">
+        <h1>Hubungi Kami</h1>
+        <div style="background: white; padding: 2rem; border-radius: 8px; margin-top: 1rem;">
+            <p>Ada pertanyaan mengenai khasiat produk atau pemesanan skala besar? Kontak kami langsung melalui jalur di bawah ini:</p>
+            <ul style="margin: 1rem 0 0 1.5rem;">
+                <li><strong>WhatsApp:</strong> +62 821-1250-435</li>
+                <li><strong>Email:</strong> admin@jamulestari.com</li>
+                <li><strong>Alamat Toko:</strong> Jl. Raya Sukorejo, Pasuruan, Jawa Timur</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="checkout" class="page">
+        <h1>Halaman Ringkasan Belanja</h1>
+        <div class="checkout-container" style="margin-top: 1rem;">
+            
+            <div>
+                <h3>Keranjang Belanja Anda</h3>
+                <table class="cart-table" style="margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Nama Jamu</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-rows">
+                        </tbody>
+                </table>
+                <div class="total-section">
+                    Total Pembayaran: <span id="cart-total-price">Rp 0</span>
+                </div>
+            </div>
+
+            <div class="checkout-form">
+                <h3>Detail Pengiriman</h3>
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="arwan">
+                </div>
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap</label>
+                    <textarea id="alamat" rows="3" placeholder="Nama Jalan, Kecamatan, Kabupaten"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pembayaran">Metode Pembayaran</label>
+                    <input type="text" id="pembayaran" value="Transfer Bank / E-Wallet" disabled>
+                </div>
+                <button class="btn-submit-order" onclick="processOrder()">Konfirmasi Pemesanan</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        const jamuProducts = [
+            { id: 1, name: "Beras Kencur Ori", price: 15000 },
+            { id: 2, name: "Kunyit Asam Segar", price: 15000 },
+            { id: 3, name: "Temulawak Hebat", price: 17000 },
+            { id: 4, name: "Cabe Puyang Pegal", price: 16000 },
+            { id: 5, name: "Pahitan Bersih Darah", price: 14000 },
+            { id: 6, name: "Galian Singset", price: 20000 },
+            { id: 7, name: "Kunci Suruh Wanita", price: 18000 },
+            { id: 8, name: "Uyup-Uyup ASI", price: 15000 },
+            { id: 9, name: "Brotowali Ekstrak", price: 16000 },
+            { id: 10, name: "Jahe Merah Hangat", price: 18000 },
+            { id: 11, name: "Secang Wangi", price: 15000 },
+            { id: 12, name: "Beras Kencur Premium", price: 22000 },
+            { id: 13, name: "Kunyit Sirih Masker", price: 19000 },
+            { id: 14, name: "Madu Kaliandra Murni", price: 35000 },
+            { id: 15, name: "Jamu Pegal Linu Super", price: 20000 },
+            { id: 16, name: "Jamu Batuk Herbal", price: 17000 }
+        ];
+
+        let cart = {};
+
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            container.innerHTML = "";
+            
+            jamuProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img-placeholder">🌿 Jamu Botol</div>
+                    <div class="product-info">
+                        <div class="product-title"><strong>${product.name}</strong></div>
+                        <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                        <div class="product-action">
+                            <input type="number" min="1" value="1" id="qty-${product.id}" class="qty-input">
+                            <button class="btn-buy" onclick="addToCart(${product.id})">Beli</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- BAGIAN UTAMA YANG DIUBAH ---
+        function addToCart(productId) {
+            const qtyInput = document.getElementById(`qty-${productId}`);
+            const quantity = parseInt(qtyInput.value);
+
+            if (quantity <= 0 || isNaN(quantity)) {
+                alert("Masukkan jumlah pembelian yang valid!");
+                return;
+            }
+
+            if (cart[productId]) {
+                cart[productId] += quantity;
+            } else {
+                cart[productId] = quantity;
+            }
+
+            updateCartCount();
+            
+            // Perintah langsung mengalihkan halaman ke checkout tanpa loading lama
+            navigateTo('checkout'); 
+        }
+        // --------------------------------
+
+        function updateCartCount() {
+            const totalItems = Object.values(cart).reduce((sum, current) => sum + current, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+        }
+
+        function renderCheckout() {
+            const tbody = document.getElementById('cart-items-rows');
+            const totalSpan = document.getElementById('cart-total-price');
+            tbody.innerHTML = "";
+            
+            let grandTotal = 0;
+            let hasItems = false;
+
+            for (const productId in cart) {
+                const itemQty = cart[productId];
+                const productDetail = jamuProducts.find(p => p.id == productId);
+
+                if (productDetail && itemQty > 0) {
+                    hasItems = true;
+                    const subtotal = productDetail.price * itemQty;
+                    grandTotal += subtotal;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${productDetail.name}</strong></td>
+                        <td>Rp ${productDetail.price.toLocaleString('id-ID')}</td>
+                        <td>${itemQty} Botol</td>
+                        <td>Rp ${subtotal.toLocaleString('id-ID')}</td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            }
+
+            if (!hasItems) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #999;">Keranjang belanja kosong. Silakan pilih jamu di halaman produk.</td></tr>`;
+            }
+
+            totalSpan.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        }
+
+        function navigateTo(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+            
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) activeNav.classList.add('active');
+
+            if (pageId === 'checkout') {
+                renderCheckout();
+            }
+        }
+
+        function processOrder() {
+            const nama = document.getElementById('nama').value;
+            const alamat = document.getElementById('alamat').value;
+
+            if (!nama || !alamat) {
+                alert("Harap lengkapi nama dan alamat pengiriman terlebih dahulu!");
+                return;
+            }
+
+            alert(`Terima kasih ${nama}, Pesanan Anda telah tercatat.`);
+            cart = {};
+            updateCartCount();
+            navigateTo('home');
+        }
+
+        window.onload = function() {
+            renderProducts();
+        };
+    </script>
+</body>
+</html>
